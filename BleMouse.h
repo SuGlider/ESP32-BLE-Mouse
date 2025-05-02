@@ -3,6 +3,20 @@
 #include "sdkconfig.h"
 #if defined(CONFIG_BT_ENABLED)
 
+#ifdef ESP_ARDUINO_VERSION_MAJOR
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+// Arduino Core 3 has changed BLE library to use Arduino String
+#define BLE_STRING String
+#else
+// Arduino Core 2 BLE library uses C++ STD string
+#define BLE_STRING std::string
+#endif
+#else
+// Arduino Core 1 BLE library uses C++ STD string
+#define BLE_STRING std::string 
+#endif
+
+
 #include "BleConnectionStatus.h"
 #include "BLEHIDDevice.h"
 #include "BLECharacteristic.h"
@@ -24,7 +38,7 @@ private:
   void rawAction(uint8_t msg[], char msgSize);
   static void taskServer(void* pvParameter);
 public:
-  BleMouse(std::string deviceName = "ESP32 Bluetooth Mouse", std::string deviceManufacturer = "Espressif", uint8_t batteryLevel = 100);
+  BleMouse(BLE_STRING deviceName = "ESP32 Bluetooth Mouse", BLE_STRING deviceManufacturer = "Espressif", uint8_t batteryLevel = 100);
   void begin(void);
   void end(void);
   void click(uint8_t b = MOUSE_LEFT);
@@ -35,8 +49,8 @@ public:
   bool isConnected(void);
   void setBatteryLevel(uint8_t level);
   uint8_t batteryLevel;
-  std::string deviceManufacturer;
-  std::string deviceName;
+  BLE_STRING deviceManufacturer;
+  BLE_STRING deviceName;
 protected:
   virtual void onStarted(BLEServer *pServer) { };
 };
