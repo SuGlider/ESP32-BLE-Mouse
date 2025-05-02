@@ -5,7 +5,7 @@
 #include "BLEHIDDevice.h"
 #include "HIDTypes.h"
 #include "HIDKeyboardTypes.h"
-#include <driver/adc.h>
+//#include <driver/adc.h>  // causes some lagacy warning with IDF 5.x | Arduino Core 3.x
 #include "sdkconfig.h"
 
 #include "BleConnectionStatus.h"
@@ -60,7 +60,7 @@ static const uint8_t _hidReportDescriptor[] = {
   END_COLLECTION(0)          // END_COLLECTION
 };
 
-BleMouse::BleMouse(std::string deviceName, std::string deviceManufacturer, uint8_t batteryLevel) : 
+BleMouse::BleMouse(BLE_STRING deviceName, BLE_STRING deviceManufacturer, uint8_t batteryLevel) : 
     _buttons(0),
     hid(0)
 {
